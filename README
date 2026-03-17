@@ -1,16 +1,8 @@
----
-
-<div align="center">
-
 # Ablation Studies for 3D Rocket Landing with PPO
 
-### Deterministic Powered Descent via Deep Reinforcement Learning
+**Deterministic Powered Descent via Deep Reinforcement Learning**
 
-[Watch the best model land →](results/ppo_v35/model_2048000.mp4)
-
-</div>
-
----
+> Systematic ablation studies of PPO pipeline components for 3D rocket first-stage propulsive landing in MuJoCo
 
 ## Executive Summary
 
