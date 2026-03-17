@@ -2,8 +2,6 @@
 
 Systematic ablation studies of PPO pipeline components for 3D rocket first-stage propulsive landing in MuJoCo
 
----
-
 ## Video: Final Trained Policy in Action
 
 [![Watch the video](https://img.youtube.com/vi/WIIwa1i53GI/0.jpg)](https://youtu.be/WIIwa1i53GI)
@@ -12,7 +10,6 @@ Systematic ablation studies of PPO pipeline components for 3D rocket first-stage
 
 *Best model achieving 790m autonomous landings with 3.9 m/s touchdown speed and 0.6° tilt*
 
----
 
 ## Executive Summary
 
