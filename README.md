@@ -8,7 +8,7 @@
 
 ## Video: Final Trained Policy in Action
 
-![Final model landing](https://raw.githubusercontent.com/pkothare/mujoco-rocket-landing/main/final_model.mp4)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WIIwa1i53GI?si=3OJ6fsix3BR9iqe5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 *Best model achieving 790m autonomous landings with 3.9 m/s touchdown speed and 0.6° tilt*
 
