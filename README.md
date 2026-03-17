@@ -1,8 +1,6 @@
 # Ablation Studies for 3D Rocket Landing with PPO
 
-**Deterministic Powered Descent via Deep Reinforcement Learning**
-
-> Systematic ablation studies of PPO pipeline components for 3D rocket first-stage propulsive landing in MuJoCo
+Systematic ablation studies of PPO pipeline components for 3D rocket first-stage propulsive landing in MuJoCo
 
 ---
 
