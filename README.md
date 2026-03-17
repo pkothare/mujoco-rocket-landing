@@ -4,6 +4,19 @@
 
 > Systematic ablation studies of PPO pipeline components for 3D rocket first-stage propulsive landing in MuJoCo
 
+---
+
+## Video: Final Trained Policy in Action
+
+<video width="640" height="480" controls>
+  <source src="final_model.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Best model achieving 790m autonomous landings with 3.9 m/s touchdown speed and 0.6° tilt*
+
+---
+
 ## Executive Summary
 
 This project systematically investigates which components of a modern PPO pipeline are **essential** for learning 3D rocket landings in a custom MuJoCo environment with thrust-vector control, grid fins, and reaction-control (RCS) jets.
