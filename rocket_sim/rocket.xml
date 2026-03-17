@@ -1,0 +1,176 @@
+<!-- Rocket first stage – real-scale model (included by scene.xml) -->
+<mujoco model="rocket">
+  <compiler angle="radian" coordinate="local" inertiafromgeom="auto"/>
+
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="RK4">
+    <flag warmstart="enable"/>
+  </option>
+
+  <default>
+    <joint armature="0" damping="0.1" limited="true"/>
+    <geom contype="1" conaffinity="1" friction="1.0 0.005 0.0001" rgba="0.8 0.8 0.8 1"/>
+    <motor ctrllimited="true" ctrlrange="-1 1"/>
+  </default>
+
+  <asset>
+    <material name="body_white" rgba="1 1 1 1"/>
+    <material name="body_black" rgba="0.15 0.15 0.15 1"/>
+    <material name="engine_metal" rgba="0.5 0.5 0.5 1" specular="0.8" shininess="0.8"/>
+    <material name="grid_fin_mat" rgba="0.3 0.3 0.3 1"/>
+  </asset>
+
+  <worldbody>
+    <!-- Rocket first stage – real dimensions -->
+    <!-- 42 m tall, 3.7 m diameter (radius 1.85 m), 540 000 kg -->
+    <!-- Body layout (z = -22 to +20, total 42 m): -->
+    <!--   Nozzle bottom -22, engines -21 to -19, octaweb -19 to -18, -->
+    <!--   engine section -18 to -14, LOX/RP-1 tanks -14 to +14, interstage +14 to +20 -->
+    <body name="rocket" pos="0 0 5000">
+      <freejoint name="rocket_joint"/>
+
+      <!-- Inertial properties (uniform cylinder approximation) -->
+      <!-- Ix = Iy = M/12*(3r² + h²) = 540000/12*(3*1.85² + 42²) ≈ 80 000 000 -->
+      <!-- Iz = M/2*r² = 540000/2*1.85² ≈ 925 000 -->
+      <inertial pos="0 0 5" mass="540000" diaginertia="80000000 80000000 925000"/>
+
+      <!-- Overhead camera (skydiver view – looking straight down) -->
+      <camera name="skydiver" pos="0 0 250" xyaxes="1 0 0 0 1 0" fovy="90"/>
+
+      <!-- Main body – LOX/RP-1 tank section (white), 28 m tall -->
+      <geom name="first_stage_lox" type="cylinder" pos="0 0 0" size="1.85 14.0" material="body_white"/>
+
+      <!-- Engine section (bottom, darker), 4 m tall -->
+      <geom name="engine_section" type="cylinder" pos="0 0 -16" size="1.9 2.0" material="body_black"/>
+
+      <!-- Octaweb engine mount + single Merlin nozzle bell -->
+      <geom name="octaweb" type="cylinder" pos="0 0 -18.5" size="1.5 0.5" material="engine_metal"/>
+      <geom name="merlin_nozzle" type="cylinder" pos="0 0 -19.5" size="0.6 0.5" material="engine_metal"/>
+
+      <!-- Grid fins (4 at 90° intervals, mounted horizontally with pivot) -->
+      <body name="grid_fin_1" pos="1.9 0 13">
+        <joint name="grid_fin_1_pitch" type="hinge" axis="0 1 0" range="-1.0 1.0" damping="100000" stiffness="500000"/>
+        <geom name="grid_fin_1_geom" type="box" size="2.5 1.5 0.2" material="grid_fin_mat" contype="0" conaffinity="0"/>
+      </body>
+
+      <body name="grid_fin_2" pos="-1.9 0 13">
+        <joint name="grid_fin_2_pitch" type="hinge" axis="0 1 0" range="-1.0 1.0" damping="100000" stiffness="500000"/>
+        <geom name="grid_fin_2_geom" type="box" size="2.5 1.5 0.2" material="grid_fin_mat" contype="0" conaffinity="0"/>
+      </body>
+
+      <body name="grid_fin_3" pos="0 1.9 13">
+        <joint name="grid_fin_3_pitch" type="hinge" axis="1 0 0" range="-1.0 1.0" damping="100000" stiffness="500000"/>
+        <geom name="grid_fin_3_geom" type="box" size="1.5 2.5 0.2" material="grid_fin_mat" contype="0" conaffinity="0"/>
+      </body>
+
+      <body name="grid_fin_4" pos="0 -1.9 13">
+        <joint name="grid_fin_4_pitch" type="hinge" axis="1 0 0" range="-1.0 1.0" damping="100000" stiffness="500000"/>
+        <geom name="grid_fin_4_geom" type="box" size="1.5 2.5 0.2" material="grid_fin_mat" contype="0" conaffinity="0"/>
+      </body>
+
+      <!-- Landing legs (4 at cardinal directions) -->
+      <!-- TOP-DOWN deployment: stowed pointing UP (angle=0), -->
+      <!-- deploy downward & outward (angle=2.4 rad ≈ 137°). -->
+      <!-- 6 m struts with triangular A-frame brace for rigidity. -->
+      <!-- At full deploy: pad z ≈ -20.4 (below nozzle at -20). -->
+
+      <!-- Leg 1: +X -->
+      <body name="leg_1" pos="1.9 0 -16">
+        <joint name="leg_1_deploy" type="hinge" axis="0 1 0" range="0 2.4" damping="5000000" stiffness="0"/>
+        <geom name="leg_1_strut" type="capsule" fromto="0 0 0 0 0 6" size="0.2" rgba="0.2 0.2 0.2 1" contype="0" conaffinity="0"/>
+        <geom name="leg_1_brace" type="capsule" fromto="-1.5 0 0 0 0 6" size="0.12" rgba="0.25 0.25 0.25 1" contype="0" conaffinity="0"/>
+        <geom name="leg_1_pad" type="cylinder" pos="0 0 6.3" size="0.6 0.15" rgba="0.3 0.3 0.3 1"/>
+      </body>
+
+      <!-- Leg 2: -X -->
+      <body name="leg_2" pos="-1.9 0 -16">
+        <joint name="leg_2_deploy" type="hinge" axis="0 -1 0" range="0 2.4" damping="5000000" stiffness="0"/>
+        <geom name="leg_2_strut" type="capsule" fromto="0 0 0 0 0 6" size="0.2" rgba="0.2 0.2 0.2 1" contype="0" conaffinity="0"/>
+        <geom name="leg_2_brace" type="capsule" fromto="1.5 0 0 0 0 6" size="0.12" rgba="0.25 0.25 0.25 1" contype="0" conaffinity="0"/>
+        <geom name="leg_2_pad" type="cylinder" pos="0 0 6.3" size="0.6 0.15" rgba="0.3 0.3 0.3 1"/>
+      </body>
+
+      <!-- Leg 3: +Y -->
+      <body name="leg_3" pos="0 1.9 -16">
+        <joint name="leg_3_deploy" type="hinge" axis="-1 0 0" range="0 2.4" damping="5000000" stiffness="0"/>
+        <geom name="leg_3_strut" type="capsule" fromto="0 0 0 0 0 6" size="0.2" rgba="0.2 0.2 0.2 1" contype="0" conaffinity="0"/>
+        <geom name="leg_3_brace" type="capsule" fromto="0 -1.5 0 0 0 6" size="0.12" rgba="0.25 0.25 0.25 1" contype="0" conaffinity="0"/>
+        <geom name="leg_3_pad" type="cylinder" pos="0 0 6.3" size="0.6 0.15" rgba="0.3 0.3 0.3 1"/>
+      </body>
+
+      <!-- Leg 4: -Y -->
+      <body name="leg_4" pos="0 -1.9 -16">
+        <joint name="leg_4_deploy" type="hinge" axis="1 0 0" range="0 2.4" damping="5000000" stiffness="0"/>
+        <geom name="leg_4_strut" type="capsule" fromto="0 0 0 0 0 6" size="0.2" rgba="0.2 0.2 0.2 1" contype="0" conaffinity="0"/>
+        <geom name="leg_4_brace" type="capsule" fromto="0 1.5 0 0 0 6" size="0.12" rgba="0.25 0.25 0.25 1" contype="0" conaffinity="0"/>
+        <geom name="leg_4_pad" type="cylinder" pos="0 0 6.3" size="0.6 0.15" rgba="0.3 0.3 0.3 1"/>
+      </body>
+
+      <!-- Force application sites -->
+      <site name="thrust_site" pos="0 0 -20" size="0.5"/>
+      <site name="rcs_top_x_pos" pos="1.9 0 13" size="0.2"/>
+      <site name="rcs_top_x_neg" pos="-1.9 0 13" size="0.2"/>
+      <site name="rcs_top_y_pos" pos="0 1.9 13" size="0.2"/>
+      <site name="rcs_top_y_neg" pos="0 -1.9 13" size="0.2"/>
+    </body>
+  </worldbody>
+
+  <!-- Prevent self-collision between rocket sub-bodies -->
+  <contact>
+    <exclude body1="rocket" body2="leg_1"/>
+    <exclude body1="rocket" body2="leg_2"/>
+    <exclude body1="rocket" body2="leg_3"/>
+    <exclude body1="rocket" body2="leg_4"/>
+    <exclude body1="leg_1" body2="leg_2"/>
+    <exclude body1="leg_1" body2="leg_3"/>
+    <exclude body1="leg_1" body2="leg_4"/>
+    <exclude body1="leg_2" body2="leg_3"/>
+    <exclude body1="leg_2" body2="leg_4"/>
+    <exclude body1="leg_3" body2="leg_4"/>
+  </contact>
+
+  <actuator>
+    <!-- Main engine thrust (scaled to preserve T/W ≈ 2.0) -->
+    <general name="main_thrust" site="thrust_site" gear="0 0 10800000 0 0 0" ctrlrange="0 1"/>
+
+    <!-- Thrust Vector Control (scaled to preserve angular acceleration) -->
+    <!-- α_old = 25000/1500 ≈ 16.7 rad/s²;  new gear = 80e6 × 16.7 ≈ 1.33e9 -->
+    <general name="tvc_pitch" site="thrust_site" gear="0 0 0 1333000000 0 0" ctrlrange="-1 1"/>
+    <general name="tvc_yaw"   site="thrust_site" gear="0 0 0 0 1333000000 0" ctrlrange="-1 1"/>
+
+    <!-- Grid fin actuators (scaled by Ixy ratio ≈ 53 333) -->
+    <motor name="grid_fin_1_ctrl" joint="grid_fin_1_pitch" gear="26700000" ctrlrange="-1 1"/>
+    <motor name="grid_fin_2_ctrl" joint="grid_fin_2_pitch" gear="26700000" ctrlrange="-1 1"/>
+    <motor name="grid_fin_3_ctrl" joint="grid_fin_3_pitch" gear="26700000" ctrlrange="-1 1"/>
+    <motor name="grid_fin_4_ctrl" joint="grid_fin_4_pitch" gear="26700000" ctrlrange="-1 1"/>
+
+    <!-- Landing leg deployment (position-servo, range 0-2.4 for top-down deploy) -->
+    <!-- Extremely stiff: kp=10M holds position rigidly, kv=1M damps oscillation -->
+    <position name="leg_1_ctrl" joint="leg_1_deploy" kp="10000000" kv="1000000" ctrlrange="0 2.4"/>
+    <position name="leg_2_ctrl" joint="leg_2_deploy" kp="10000000" kv="1000000" ctrlrange="0 2.4"/>
+    <position name="leg_3_ctrl" joint="leg_3_deploy" kp="10000000" kv="1000000" ctrlrange="0 2.4"/>
+    <position name="leg_4_ctrl" joint="leg_4_deploy" kp="10000000" kv="1000000" ctrlrange="0 2.4"/>
+
+    <!-- Cold gas RCS thrusters -->
+    <!-- Pitch/roll (body X/Y torque): scaled by Ixy ratio ≈ 53 333 -->
+    <general name="rcs_x_pos" site="rcs_top_x_pos" gear="0 0 0 0 26700000 0" ctrlrange="-1 1"/>
+    <general name="rcs_y_pos" site="rcs_top_y_pos" gear="0 0 0 26700000 0 0" ctrlrange="-1 1"/>
+    <!-- Yaw (body Z torque): scaled by Iz ratio ≈ 30 833 -->
+    <general name="rcs_x_neg" site="rcs_top_x_neg" gear="0 0 0 0 0 15400000" ctrlrange="-1 1"/>
+    <general name="rcs_y_neg" site="rcs_top_y_neg" gear="0 0 0 0 0 15400000" ctrlrange="-1 1"/>
+  </actuator>
+
+  <sensor>
+    <framepos    name="rocket_pos"    objtype="body" objname="rocket"/>
+    <framequat   name="rocket_quat"   objtype="body" objname="rocket"/>
+    <framelinvel name="rocket_linvel" objtype="body" objname="rocket"/>
+    <frameangvel name="rocket_angvel" objtype="body" objname="rocket"/>
+
+    <accelerometer name="imu_accel" site="thrust_site"/>
+    <gyro          name="imu_gyro"  site="thrust_site"/>
+
+    <touch name="leg_1_contact" site="thrust_site"/>
+    <touch name="leg_2_contact" site="thrust_site"/>
+    <touch name="leg_3_contact" site="thrust_site"/>
+    <touch name="leg_4_contact" site="thrust_site"/>
+  </sensor>
+</mujoco>
