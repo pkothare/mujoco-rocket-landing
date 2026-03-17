@@ -8,7 +8,9 @@
 
 ## Video: Final Trained Policy in Action
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/WIIwa1i53GI?si=3OJ6fsix3BR9iqe5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[Watch the video](https://youtu.be/WIIwa1i53GI?si=n8WeW7AmR9UfikqJ)
+
+[Watch directly on YouTube](https://youtu.be/WIIwa1i53GI?si=n8WeW7AmR9UfikqJ)
 
 *Best model achieving 790m autonomous landings with 3.9 m/s touchdown speed and 0.6° tilt*
 
